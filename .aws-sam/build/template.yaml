@@ -52,6 +52,16 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 2
         WriteCapacityUnits: 2
+  SearchProfileTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: SearchGenieAPISearchProfile
+      PrimaryKey:
+        Name: Id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2
 Outputs:
   WebEndpoint:
     Description: API Gateway endpoint URL

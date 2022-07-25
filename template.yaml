@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
   Sample SAM Template for SearchGenieAPI
@@ -41,11 +41,24 @@ Resources:
             Path: /
             Method: ANY
 
+  
+
   # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
   SampleTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
       TableName: SearchGenieAPIBookCatalog
+      PrimaryKey:
+        Name: Id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2
+
+  SearchProfileTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: SearchGenieAPISearchProfile
       PrimaryKey:
         Name: Id
         Type: String
