@@ -2,6 +2,9 @@ AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
   Sample SAM Template for SearchGenieAPI
+Metadata:
+  Databases:
+    Description: "This is simple application for search made very easy"
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -40,8 +43,34 @@ Resources:
           Properties:
             Path: /
             Method: ANY
-
-  
+  NetCodeWebAPISearchServerless:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Description: A simple example includes a .NET Core WebAPI App with DynamoDB table.
+      CodeUri: ./src/SearchGenieAPI/
+      Handler: SearchGenieAPI
+      Runtime: dotnet6
+      MemorySize: 1024
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          SAMPLE_TABLE2: !Ref SearchProfileTable
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SearchProfileTable
+      Events:
+        ProxyResource:
+          Type: HttpApi
+          Properties:
+            PayloadFormatVersion: "2.0"
+            Path: /{proxy+}
+            Method: ANY
+        RootResource:
+          PayloadFormatVersion: "2.0"
+          Type: HttpApi
+          Properties:
+            Path: /searchProfiles
+            Method: ANY
 
   # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
   SampleTable:
